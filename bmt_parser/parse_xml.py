@@ -46,9 +46,6 @@ file_handler = logging.FileHandler('parse.log')
 file_handler.setLevel(logging.WARNING)
 logger.addHandler(file_handler)
 
-# overwrite with your directory!
-entry_dir = './data/issues'
-csv_path = 'output.csv'
 columns = ["issue_id", "date", "volume", "number", "section_id", "title",
            "authors", "section_type", "type_of_resource", "Head", "Subhead",
            "Byline", "Copy"]
@@ -85,16 +82,16 @@ def get_issue(mets_path, alto_dir, issue_id):
     return sections
 
 
-def main(data_dir):
+def main(data_dir, output_path):
     # writing column names
-    csv_file = csv.DictWriter(open(csv_path, 'w'), columns,
+    csv_file = csv.DictWriter(open(output_path, 'w'), columns,
                               delimiter=cf.CSV_SEP)
     csv_file.writeheader()
 
     # getting data out
     issue_id = 1
 
-    for dirpath, dirnames, filenames in os.walk(entry_dir):
+    for dirpath, dirnames, filenames in os.walk(data_dir):
         if not dirnames:  # starting at lowest level dir
             # alto files
             if not re.search('alto$', dirpath):

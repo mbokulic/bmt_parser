@@ -1,6 +1,6 @@
 CSV_SEP = '\t'
 
-OUTPUT_DIR = '../output'
+OUTPUT_DIR = './output'
 
 PATHS = {
     'data': 'data.csv',

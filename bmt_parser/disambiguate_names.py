@@ -33,7 +33,6 @@ logger.addHandler(file_handler)
 
 
 def prepare_disambiguation_file(path):
-    print(path)
     table = pd.read_csv(path, sep=cf.CSV_SEP)
     table = table.loc[:, ['Unique Names', 'NameCopy']]
     table.rename(columns={'Unique Names': 'found_name',
