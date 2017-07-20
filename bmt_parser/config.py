@@ -1,5 +1,7 @@
 CSV_SEP = '\t'
 
+AUTHOR_SEP = '||'
+
 OUTPUT_DIR = './output'
 
 PATHS = {
