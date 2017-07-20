@@ -3,3 +3,4 @@ data
 output
 tests/manual_*
 venv
+*.log
