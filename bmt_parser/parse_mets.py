@@ -102,7 +102,7 @@ def _parse_section(section, type, structMap, filename):
     result['title'] = ' '.join([
         part.string for part in section.titleInfo.find_all(True)])
 
-    names = section.find_all('name', type='personal', recursive=False)
+    names = section.find_all('name', recursive=False)
     if names:
         names_text = [name.displayForm.string for name in names
                       if name.role.roleTerm.string == 'cre']
@@ -230,4 +230,11 @@ def _get_alto_locations(section):
 
 
 if __name__ == '__main__':
-    main('./data/issues/1912/10_04/bmtnabg_1912-10_04.mets.xml')
+    import argparse
+    import json
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--path', '-p', dest='file_path', required=True)
+    args = parser.parse_args()
+
+    res = main(args.file_path)
+    print(json.dumps(res))
