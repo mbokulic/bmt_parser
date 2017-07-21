@@ -182,7 +182,6 @@ def _test_section(section):
         if re.search('c[0-9]{3}', section['ID']):
             return True
 
-    logger.warning('ignoring section!')
     return False
 
 
@@ -190,6 +189,8 @@ def _get_section_type(section, filename):
     '''returns section type and None if it is an invalid section
     '''
     if not _test_section(section):
+        logger.warning('ignoring section: {} {}'
+                       .format(section.name, section.attrs))
         return None
 
     resource_type = section.find('typeOfResource').string
