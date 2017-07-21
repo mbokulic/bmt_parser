@@ -51,9 +51,9 @@ def main(filepath):
         root = bs4.BeautifulSoup(file, 'xml')
 
     filename = os.path.split(filepath)[1]
-    issue_metadata = _get_issue_metadata(root, filename)
-    result.update(issue_metadata)
 
+    # getting data
+    result.update(_get_issue_metadata(root, filename))
     result['sections'] = _get_issue_sections(root, filename)
 
     return result
@@ -177,10 +177,12 @@ def _test_section(section):
     if section.get('type'):
         if section['type'] == 'constituent':
             return True
-        # due to input mistakes, some sections do not have type
-        elif section.get('ID'):
-            if re.search('c[0-9]{3}', section['ID']):
-                return True
+    # due to input mistakes, some sections do not have type
+    elif section.get('ID'):
+        if re.search('c[0-9]{3}', section['ID']):
+            return True
+
+    logger.warning('ignoring section!')
     return False
 
 
