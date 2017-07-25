@@ -1,6 +1,36 @@
 import re
 
 
+def remove_strange_chars(string):
+    return re.sub('[\x98\x9c]', '', string)
+
+
+def capitalize(string):
+    if are_initials(string):
+        return string
+    elif any([s.isupper() for s in string.split(' ')]):
+
+        result = ''
+        rest = string
+        regex = '[\\( -]'
+        m = re.search(regex, rest)
+        while m:
+            result = result + rest[:m.end()].capitalize()
+            rest = rest[m.end():]
+            m = re.search(regex, rest)
+        result = result + rest.capitalize()
+
+        return result
+    else:
+        return string
+
+
+def split_and_capitalize(string, sep):
+    res = []
+    for s in string.split(sep):
+        capital = s[0].upper() + s[1:].lower()
+        res.append(capital)
+    return sep.join(res)
 
 
 def are_initials(string):
@@ -17,7 +47,7 @@ def fix_initials(string):
 
 
 def get_initials(string):
-    matches = re.findall('\w+\.? *', string)
+    matches = re.findall("[\w']+\.? *", string)
     matches = [(m.strip()[0] + '.') for m in matches]
     initial = ' '.join(matches)
     return initial
@@ -56,3 +86,23 @@ def get_title_and_rest(string):
         return (title, string[match.end():].strip())
     else:
         return ('', string)
+
+# common substitutions: ú=u... do that?
+
+
+def strip_year(string):
+    return re.sub('[, ]+[0-9\?\.\(\)]*-[0-9\?\.\(\)]*.*$', '', string)
+
+
+def order_names(string):
+    '''orders a "surname, name" to "name surname" (removes the comma), or
+    returns the string if there is no comma
+    '''
+    match = re.search(',', string)
+    if match:
+        split = re.split(',', string)
+        split.reverse()
+        return ' '.join([s.strip() for s in split])
+    else:
+        return string
+    return string
