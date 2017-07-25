@@ -50,6 +50,11 @@ parser.add_argument('--disambiguation_file', '-d', required=False,
                     'will need to convert. If not provided, no disambiguation '
                     'will be done.')
 
+parser.add_argument('--name_replacements', '-repl', required=False,
+                    help='Optional: path to json that has replacements for the'
+                    'resolved name ("Unique Names") column in the '
+                    'disambiguation file')
+
 parser.add_argument('--tf_for_graph', '-graph', required=False, default=False,
                     action='store_true', help='Flag whether to transform data '
                     'for displaying it as a graph. Will try to find data in '
@@ -77,7 +82,8 @@ if args.xml_data_path:
     parse_xml.main(args.xml_data_path, paths['data'])
 
 if args.disambiguation_file:
-    data = disambiguate.main(args.disambiguation_file, paths['data'])
+    data = disambiguate.main(args.disambiguation_file, paths['data'],
+                             args.name_replacements)
     data.to_csv(paths['disamb'], sep=cf.CSV_SEP, index=False)
 
 if args.tf_for_graph:
