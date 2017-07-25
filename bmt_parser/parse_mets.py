@@ -98,24 +98,15 @@ def _parse_section(section, type, structMap, filename):
     '''
     result = {}
 
-    # metadata
+    # metadata: title, author name, etc
     result['title'] = ' '.join([
         part.string for part in section.titleInfo.find_all(True)])
-
-    names = section.find_all('name', recursive=False)
-    if names:
-        names_text = [name.displayForm.string for name in names
-                      if name.role.roleTerm.string == 'cre']
-        names_text = [name for name in names_text if name is not None]
-        result['authors'] = '||'.join(names_text)
-    else:
-        result['authors'] = None
-
+    result['authors'] = _get_names(section, type)
     result['type_of_resource'] = section.find('typeOfResource').string
     result['section_id'] = section['ID']
 
+    # text content
     result['subsections'] = {}
-
     if type == 'image':
         remaining = RELEVANT_SUBS
     else:
@@ -155,6 +146,20 @@ def _parse_section(section, type, structMap, filename):
         result['subsections'][r] = None
 
     return result
+
+
+def _get_names(section, type):
+    names = section.find_all('name', recursive=False)
+    # if subsection, probably the author is in the parent section
+    if not names and type == 'subsection':
+        names = section.parent.find_all('name', recursive=False)
+    if names:
+        names_text = [name.displayForm.string for name in names
+                      if name.role.roleTerm.string == 'cre']
+        names_text = [name for name in names_text if name is not None]
+        return '||'.join(names_text)
+    else:
+        return None
 
 
 def _only_one(root, tag_name, filename, optional_attr={}):
